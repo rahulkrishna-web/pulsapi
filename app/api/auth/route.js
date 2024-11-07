@@ -89,21 +89,9 @@ export async function GET(request) {
       return NextResponse.json({ error: 'Failed to store the access token in the backend', details: backendErrorData.error }, { status: 500 });
     }
 
-    const backendResult = await backendResponse.json();
+    const shopifyAdminUrl = `https://${shop}.myshopify.com/admin/apps/pulsapi`;
 
-    // Return success response
-    return NextResponse.json({
-      message: 'Shopify authentication successful!',
-      shopifyParams: {
-        shop,
-        code,
-        host,
-        state,
-        timestamp,
-      },
-      access_token, // Include the access token in the response
-      backendResult, // Include the result from the backend as well
-    });
+    return NextResponse.redirect(shopifyAdminUrl);
 
   } catch (error) {
     console.error('Error in Shopify token exchange', error);
