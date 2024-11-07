@@ -2,20 +2,14 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import {useAppBridge} from '@shopify/app-bridge-react';
 import { Button, Card, Page, TextField, BlockStack, InlineStack, Text } from '@shopify/polaris';
+import TestBridge from './components/TestBridge';
 
 export default function Home() {
   const [storeUrl, setStoreUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [shopify, setShopify] = useState();
-
-  useEffect(() => {
-    let appBridge = useAppBridge();
-    setShopify(appBridge);
-  }, [shopify]);
 
   const handleStoreUrlChange = useCallback(
     (newValue) => setStoreUrl(newValue),
@@ -62,6 +56,7 @@ export default function Home() {
 
   return (
     <Page>
+      <TestBridge />
       <Card sectioned>
             <BlockStack gap="200">
               <Text variant="headingXl" as="h1">
