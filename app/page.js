@@ -69,10 +69,14 @@ export default function Home() {
         });
 
         const updateResult = await updateResponse.json();
-        console.log("Update result: ", updateResult);
-        // Redirect to Shopify OAuth page
-        const authUrl = `https://${storeUrl}/admin/oauth/authorize?client_id=${apiKey}&scope=${scopes}&redirect_uri=${redirectUri}&state=${state}`;
-        window.location.href = authUrl;
+        console.log("Update result: ", updateResult.shop.state);
+        if (updateResult.status === 'updated') {
+          console.log("Successfully updated store!");
+          
+          // Redirect to Shopify OAuth page
+          const authUrl = `https://${storeUrl}/admin/oauth/authorize?client_id=${apiKey}&scope=${scopes}&redirect_uri=${redirectUri}&state=${updateResult.shop.state}`;
+          window.location.href = authUrl;
+        }
       } else {
         console.log("Unexpected status: ", result.status);
       }
