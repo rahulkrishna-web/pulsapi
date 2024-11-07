@@ -1,16 +1,43 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAppBridge } from "@shopify/app-bridge-react";
+import Image from 'next/image';
 import { Button, Card, Page, TextField, BlockStack, InlineStack, Text } from '@shopify/polaris';
 
 export default function Home() {
   const [storeUrl, setStoreUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const appBridge = useAppBridge();
-  const isAuthenticated = appBridge.auth.isAuthenticated();
+  useEffect(() => {
+    // Check if session is authenticated when component mounts
+    const checkSession = async () => {
+      try {
+        const response = await fetch('https://eventsguy.clyrix.com/api/check-auth', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include', // Send cookies with request
+          body: JSON.stringify({ store_url: storeUrl }), // Send the store URL
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setIsAuthenticated(data.isAuthenticated);
+          console.log('authenticated', data);
+        } else {
+          setIsAuthenticated(false);
+          console.log('not authenticated', data);
+        }
+      } catch (error) {
+        console.log('Error checking authentication:', error);
+      }
+    };
+
+    checkSession();
+  }, []);
 
 
   const handleStoreUrlChange = useCallback(
