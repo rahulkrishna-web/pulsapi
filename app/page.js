@@ -56,7 +56,7 @@ export default function Home() {
 
   return (
     <Page>
-      <TestBridge />
+      
       <Card sectioned>
             <BlockStack gap="200">
               <Text variant="headingXl" as="h1">
