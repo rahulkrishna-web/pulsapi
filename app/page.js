@@ -14,13 +14,9 @@ export default function Home() {
     // Check if session is authenticated when component mounts
     const checkSession = async () => {
       try {
-        const response = await fetch('https://eventsguy.clyrix.com/api/check-auth', {
+        const response = await fetch(`https://eventsguy.clyrix.com/api/check-auth?shop=${storeUrl}`, {
           method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
           credentials: 'include', // Send cookies with request
-          body: JSON.stringify({ store_url: storeUrl }), // Send the store URL
         });
 
         if (response.ok) {
