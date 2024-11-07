@@ -21,8 +21,10 @@ export default function Home() {
         if (response.ok) {
           const data = await response.json();
           setIsAuthenticated(data.isAuthenticated);
+          console.log('authenticated', data);
         } else {
           setIsAuthenticated(false);
+          console.log('not authenticated', data);
         }
       } catch (error) {
         console.error('Error checking authentication:', error);
