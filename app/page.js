@@ -10,7 +10,7 @@ export default function Home() {
     setStoreUrl(e.target.value);
   };
 
-  const connectStore = () => {
+  const connectStore = async() => {
     if (!storeUrl){
       return console.log("no store url");
     }
@@ -20,11 +20,33 @@ export default function Home() {
     const scopes = process.env.NEXT_PUBLIC_SHOPIFY_SCOPES; // Example: "read_products,write_orders"
     const state = Math.random().toString(36).substring(2); // Generate a random string for CSRF protection
 
-    // Construct the authorization URL
-    const authUrl = `https://${storeUrl}/admin/oauth/authorize?client_id=${apiKey}&scope=${scopes}&redirect_uri=${redirectUri}&state=${state}`;
+    try{
+      const data = {
+        shop_url: storeUrl, // replace with actual data
+        state: state, // replace with actual state
+      };
+      const response = await fetch('https://eventsguy.clyrix.com/api/store-shop', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add Authorization token if required, e.g., Bearer Token
+          // 'Authorization': `Bearer ${your_token}`,
+        },
+        body: JSON.stringify(data),
+      });
 
-    // Redirect the user to the Shopify authorization screen
-    window.location.href = authUrl;
+      const result = await response.json();
+      if (result.status === 'created' || result.status === 'exists'){
+        console.log("successfully created");
+        // Construct the authorization URL
+        const authUrl = `https://${storeUrl}/admin/oauth/authorize?client_id=${apiKey}&scope=${scopes}&redirect_uri=${redirectUri}&state=${state}`;
+        window.location.href = authUrl;
+      }
+      console.log(result);
+    }
+    catch (error){
+      res.status(500).json({ error: 'Failed to make the request', details: error.message });
+    }
   }
 
   return (
