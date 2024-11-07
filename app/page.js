@@ -13,31 +13,6 @@ export default function Home() {
 
   const shopify = useAppBridge();
 
-  useEffect(() => {
-    // Check if session is authenticated when component mounts
-    const checkSession = async () => {
-      try {
-        const response = await fetch(`https://eventsguy.clyrix.com/api/check-auth?shop=${shopify.config.shop}`, {
-          method: 'GET',
-          credentials: 'include', // Send cookies with request
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setIsAuthenticated(data.isAuthenticated);
-          console.log('authenticated', data);
-        } else {
-          setIsAuthenticated(false);
-          console.log('not authenticated', data);
-        }
-      } catch (error) {
-        console.log('Error checking authentication:', error);
-      }
-    };
-
-    checkSession();
-  }, []);
-
 
   const handleStoreUrlChange = useCallback(
     (newValue) => setStoreUrl(newValue),
@@ -85,7 +60,7 @@ export default function Home() {
   return (
     <Page>
       
-        {isAuthenticated ? (
+        {shopify.config.shop ? (
           <div>
             <h2 className="text-2xl">Welcome to Your Dashboard</h2>
             <p>Here, you can manage your stores events and settings.</p>
