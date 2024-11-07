@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { Button, Card, Page, TextField, BlockStack, InlineStack, Text } from '@shopify/polaris';
 
@@ -35,9 +35,11 @@ export default function Home() {
     checkSession();
   }, []);
 
-  const handleStoreUrlChange = (e) => {
-    setStoreUrl(e.target.value);
-  };
+
+  const handleStoreUrlChange = useCallback(
+    (newValue) => setStoreUrl(newValue),
+    [],
+  );
 
   const connectStore = async () => {
     if (!storeUrl) {
