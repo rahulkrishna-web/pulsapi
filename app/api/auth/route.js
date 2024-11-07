@@ -17,9 +17,9 @@ export async function GET(request) {
   }
 
   // Step 2: Validate HMAC
-  const secret = process.env.API_SECRET;
+  const secret = process.env.SHOPIFY_API_SECRET; // Ensure it's correct in your .env
   if (!secret) {
-    throw new Error('Missing Shopify API Secret');
+    return NextResponse.json({ error: 'Missing Shopify API Secret' }, { status: 500 });
   }
 
   const queryParams = { shop, code, host, state, timestamp };
@@ -38,8 +38,8 @@ export async function GET(request) {
   }
 
   const data = {
-    client_id: NEXT_PUBLIC_SHOPIFY_API_KEY,
-    client_secret: API_SECRET,
+    client_id: process.env.SHOPIFY_API_KEY, // Use server-side environment variable
+    client_secret: process.env.SHOPIFY_API_SECRET,
     code: code,  // The authorization code from Shopify
   };
 
@@ -55,55 +55,31 @@ export async function GET(request) {
 
     const responseData = await response.json();
 
-    console.log("response data", responseData);
-
     if (responseData.error) {
       // Handle any errors from Shopify
       console.log('Shopify token exchange failed', responseData.error);
+      return NextResponse.json({ error: 'Shopify token exchange failed', details: responseData.error }, { status: 500 });
     }
-    /*
-    const { access_token } = responseData;  // Extract access token from response
 
-    // Step 3: Send the access token to your Laravel backend to store it
-    const shopData = {
-      shop_url: shop,
-      auth_token: access_token,
-      status: 'installed',  // Mark shop as installed
-    };
+    // Assuming responseData contains access_token
+    const { access_token } = responseData;
 
-    const backendResponse = await fetch('https://eventsguy.clyrix.com/api/store-auth-token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    // Optionally, save the access token to your backend here...
+
+    // Return success response for testing
+    return NextResponse.json({
+      message: 'Shopify authentication successful!',
+      shopifyParams: {
+        shop,
+        code,
+        host,
+        state,
+        timestamp,
       },
-      body: JSON.stringify(shopData),
+      access_token, // Include the access token in the response
     });
-
-    const backendResult = await backendResponse.json();
-
-    if (backendResult.error) {
-      return res.status(500).json({ error: 'Failed to store the access token in the backend', details: backendResult.error });
-    }
-
-    // Success
-    return res.status(200).json({
-      message: 'Shop installed and token saved successfully!',
-      shop: backendResult.shop,
-    });
-    */
   } catch (error) {
-    return res.status(500).json({ error: 'Internal Server Error', details: error.message });
+    console.error('Error in Shopify token exchange', error);
+    return NextResponse.json({ error: 'Internal Server Error', details: error.message }, { status: 500 });
   }
-
-  // Step 3: Return success response for testing
-  return NextResponse.json({
-    message: 'Shopify authentication successful!',
-    shopifyParams: {
-      shop,
-      code,
-      host,
-      state,
-      timestamp,
-    },
-  });
 }

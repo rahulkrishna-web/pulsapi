@@ -20,7 +20,7 @@ export default function Home() {
     setLoading(true); // Set loading to true before making request
     setError(null); // Reset previous errors
 
-    const apiKey = process.env.NEXT_PUBLIC_SHOPIFY_API_KEY;
+    const apiKey = process.env.SHOPIFY_API_KEY;
     const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI;
     const scopes = process.env.NEXT_PUBLIC_SHOPIFY_SCOPES; // Example: "read_products,write_orders"
     const state = Math.random().toString(36).substring(2); // Generate a random string for CSRF protection
