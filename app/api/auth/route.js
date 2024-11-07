@@ -1,8 +1,14 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 
-export async function POST(request) {
-  const { shop, code, hmac, host, state, timestamp } = await request.json();
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const shop = searchParams.get('shop');
+  const code = searchParams.get('code');
+  const hmac = searchParams.get('hmac');
+  const host = searchParams.get('host');
+  const state = searchParams.get('state');
+  const timestamp = searchParams.get('timestamp');
 
   // Step 1: Validate the 'shop' parameter
   const shopRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]*\.myshopify\.com$/;
