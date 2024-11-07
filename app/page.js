@@ -11,8 +11,6 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const shopify = useAppBridge();
-
 
   const handleStoreUrlChange = useCallback(
     (newValue) => setStoreUrl(newValue),
