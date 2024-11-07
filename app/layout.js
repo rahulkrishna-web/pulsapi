@@ -1,5 +1,4 @@
 'use client';
-import Script from 'next/script'
 import { AppProvider as PolarisProvider } from '@shopify/polaris';
 import enTranslations from '@shopify/polaris/locales/en.json';
 
@@ -10,7 +9,7 @@ export default function Layout({ children }) {
     <html>
       <head>
         <meta name="shopify-api-key" content={process.env.SHOPIFY_API_KEY} />
-        <Script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></Script>
+        <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
       </head>
       <body>
         <PolarisProvider i18n={enTranslations}>
