@@ -89,7 +89,7 @@ export async function GET(request) {
       return NextResponse.json({ error: 'Failed to store the access token in the backend', details: backendErrorData.error }, { status: 500 });
     }
 
-    const shopifyAdminUrl = `https://${shop}.myshopify.com/admin/apps/pulsapi`;
+    const shopifyAdminUrl = `https://${shop}/admin/apps/pulsapi`;
 
     return NextResponse.redirect(shopifyAdminUrl);
 
