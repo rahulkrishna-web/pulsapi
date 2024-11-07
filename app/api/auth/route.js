@@ -53,20 +53,45 @@ export async function GET(request) {
       body: JSON.stringify(data),
     });
 
-    const responseData = await response.json();
-
-    if (responseData.error) {
-      // Handle any errors from Shopify
-      console.log('Shopify token exchange failed', responseData.error);
-      return NextResponse.json({ error: 'Shopify token exchange failed', details: responseData.error }, { status: 500 });
+    // Check if the Shopify response is successful
+    if (!response.ok) {
+      const errorData = await response.json();
+      return NextResponse.json({ error: 'Shopify token exchange failed', details: errorData.error }, { status: 500 });
     }
 
-    // Assuming responseData contains access_token
+    const responseData = await response.json();
     const { access_token } = responseData;
 
-    // Optionally, save the access token to your backend here...
+    // Ensure that the access_token is present
+    if (!access_token) {
+      return NextResponse.json({ error: 'Access token missing from Shopify response' }, { status: 500 });
+    }
 
-    // Return success response for testing
+    // Prepare data for your backend
+    const shopData = {
+      shop_url: shop,
+      auth_token: access_token,
+      status: 'installed',  // Mark shop as installed
+    };
+
+    // Step 3: Send the access token to your backend to store it
+    const backendResponse = await fetch('https://eventsguy.clyrix.com/api/store-auth-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(shopData),
+    });
+
+    // Check the response from the backend
+    if (!backendResponse.ok) {
+      const backendErrorData = await backendResponse.json();
+      return NextResponse.json({ error: 'Failed to store the access token in the backend', details: backendErrorData.error }, { status: 500 });
+    }
+
+    const backendResult = await backendResponse.json();
+
+    // Return success response
     return NextResponse.json({
       message: 'Shopify authentication successful!',
       shopifyParams: {
@@ -77,7 +102,9 @@ export async function GET(request) {
         timestamp,
       },
       access_token, // Include the access token in the response
+      backendResult, // Include the result from the backend as well
     });
+
   } catch (error) {
     console.error('Error in Shopify token exchange', error);
     return NextResponse.json({ error: 'Internal Server Error', details: error.message }, { status: 500 });
