@@ -10,7 +10,12 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [shopify, setShopify] = useState();
 
+  useEffect(() => {
+    let appBridge = useAppBridge();
+    setShopify(appBridge);
+  }, [shopify]);
 
   const handleStoreUrlChange = useCallback(
     (newValue) => setStoreUrl(newValue),
