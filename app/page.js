@@ -59,16 +59,7 @@ export default function Home() {
 
   return (
     <Page>
-      
-        {shopify.config.shop ? (
-          <div>
-            <h2 className="text-2xl">Welcome to Your Dashboard</h2>
-            <p>Here, you can manage your stores events and settings.</p>
-          </div>
-        ) : (
-          <>
-          
-          <Card sectioned>
+      <Card sectioned>
             <BlockStack gap="200">
               <Text variant="headingXl" as="h1">
                 Connect your store
@@ -92,8 +83,6 @@ export default function Home() {
                 </InlineStack>
               </BlockStack>
           </Card>
-          </>
-        )}
 
         {error && <p className="text-red-500 mt-4">{error}</p>}
       
