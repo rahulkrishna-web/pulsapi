@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import {useAppBridge} from '@shopify/app-bridge-react';
 import { Button, Card, Page, TextField, BlockStack, InlineStack, Text } from '@shopify/polaris';
 
 export default function Home() {
@@ -10,11 +11,13 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  const shopify = useAppBridge();
+
   useEffect(() => {
     // Check if session is authenticated when component mounts
     const checkSession = async () => {
       try {
-        const response = await fetch(`https://eventsguy.clyrix.com/api/check-auth?shop=${storeUrl}`, {
+        const response = await fetch(`https://eventsguy.clyrix.com/api/check-auth?shop=${shopify.config.shop}`, {
           method: 'GET',
           credentials: 'include', // Send cookies with request
         });
