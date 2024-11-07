@@ -89,7 +89,7 @@ export default function Home() {
         {isAuthenticated ? (
           <div>
             <h2 className="text-2xl">Welcome to Your Dashboard</h2>
-            <p>Here, you can manage your store's events and settings.</p>
+            <p>Here, you can manage your stores events and settings.</p>
           </div>
         ) : (
           <>
