@@ -3,6 +3,7 @@ import { useSearchParams } from 'next/navigation';
 import { AppProvider as PolarisProvider } from '@shopify/polaris';
 import enTranslations from '@shopify/polaris/locales/en.json';
 
+
 import '@shopify/polaris/build/esm/styles.css';
 
 export default function Layout({ children }) {
