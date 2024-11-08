@@ -16,7 +16,6 @@ export default function Layout({ children }) {
         {shop && (
           <>
           <meta name="shopify-api-key" content={process.env.SHOPIFY_API_KEY} />
-          <meta name="shopify-shop" content={shop} />
           <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
           </>
         )}
